@@ -1,1 +1,1 @@
-FROM alpine:latest
+FROM lsegal/jnlp-docker-agent:alpine
