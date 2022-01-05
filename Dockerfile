@@ -1,1 +1,3 @@
-FROM lsegal/jnlp-docker-agent:alpine
+FROM docker:20
+
+RUN apk add --no-cache tzdata
