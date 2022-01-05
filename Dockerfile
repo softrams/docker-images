@@ -15,7 +15,6 @@ RUN pip3 install awscli
 
 # Setup jenkins-agent
 COPY ./dockerd-entrypoint.sh /usr/local/bin/dockerd-entrypoint.sh
-RUN mv /usr/local/bin/jenkins-slave /usr/local/bin/jenkins-agent
 
 # Entrypoint
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
