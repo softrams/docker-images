@@ -1,1 +1,1 @@
-FROM node:latest
+FROM sonarsource/sonar-scanner-cli:latest
