@@ -1,1 +1,1 @@
-FROM maven:3.8.5-openjdk-8
+FROM hashicorp/packer:light-1.8.0
