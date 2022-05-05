@@ -1,1 +1,2 @@
-FROM alpine/git:latest
+FROM alpine:latest
+RUN apk add --no-cache git
