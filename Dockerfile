@@ -1,1 +1,1 @@
-FROM alpine:latest
+FROM node:16.15.0
