@@ -1,1 +1,1 @@
-FROM alpine:latest
+FROM amazon/aws-cli:latest

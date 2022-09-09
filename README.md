@@ -1,4 +1,2 @@
-# docker-images
-Repo to build images and host them on Github
-
-* Each branch refers to a different docker image.
+# aws-cli:latest
+aws-cli repo for building image to store at GitHub
