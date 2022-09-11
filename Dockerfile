@@ -1,1 +1,1 @@
-FROM node:12.16.1
+FROM maven:ibmjava
