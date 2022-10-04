@@ -6,6 +6,7 @@ rm -rf /tmp/* && \
 rm -rf /var/cache/apk/* && \
 apk add --no-cache openssh-client && \
 apk --update --no-cache add py-pip && \
-pip install boto3
+pip install boto3 && \
+pip install botocore
 
 
