@@ -22,10 +22,8 @@ RUN set -eux; \
     adduser -S -D -u ${UID} -G scanner-cli scanner-cli; \
     apk add --no-cache --virtual build-dependencies wget unzip gnupg; \
     apk add --no-cache git python3 py-pip bash shellcheck 'nodejs>12' openjdk11-jre curl musl-locales musl-locales-lang; \
-    wget -U "scannercli" -q -O /opt/sonar-scanner-cli.zip 
-https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip; \
-    wget -U "scannercli" -q -O /opt/sonar-scanner-cli.zip.asc 
-https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip.asc; \
+    wget -U "scannercli" -q -O /opt/sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip; \
+    wget -U "scannercli" -q -O /opt/sonar-scanner-cli.zip.asc https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip.asc; \
     for server in $(shuf -e hkps://keys.openpgp.org \
                             hkps://keyserver.ubuntu.com) ; do \
         gpg --batch --keyserver "${server}" --recv-keys 679F1EE92B19609DE816FDE81DB198F93525EC1A && break || : ; \
@@ -49,4 +47,3 @@ WORKDIR ${SRC_PATH}
 
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
-CMD ["sonar-scanner"]
