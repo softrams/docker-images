@@ -1,4 +1,4 @@
-FROM node:12.20.2
+FROM node:lts
 
 # Install Google Chrome
 RUN apt-get update && \
