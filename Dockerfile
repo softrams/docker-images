@@ -5,4 +5,3 @@ ENV WORKSPACE="."
 #install psql client
 USER root
 RUN apk add postgresql-client
-CMD ["cat"]
