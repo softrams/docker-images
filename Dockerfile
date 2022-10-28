@@ -1,4 +1,6 @@
-FROM python:3.10.8-alpine3.16
+FROM node:18.11.0
 
-RUN apk add --no-cache --virtual jsonlint \
-    && pip3 install simplejson
+# Install Google Chrome
+RUN apt-get update && \
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt install --assume-yes ./google-chrome-stable_current_amd64.deb
