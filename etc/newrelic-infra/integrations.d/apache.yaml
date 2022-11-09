@@ -1,0 +1,7 @@
+integrations:
+  - name: nri-apache
+    env:
+      METRICS: "true"
+      STATUS_URL: {{APACHE_STATUS}}
+      REMOTE_MONITORING: true
+    interval: 15s
