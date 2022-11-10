@@ -4,7 +4,7 @@ integrations:
       METRICS: "true"
       STATUS_URL: {{APACHE_STATUS}}
       REMOTE_MONITORING: true
-    interval: 15s
+    interval: {{NRIA_INTERVAL}}
     labels:
       environment: {{ENVIRONMENT}}
       project: {{PROJECT}}
