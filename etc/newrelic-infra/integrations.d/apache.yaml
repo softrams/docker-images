@@ -5,3 +5,6 @@ integrations:
       STATUS_URL: {{APACHE_STATUS}}
       REMOTE_MONITORING: true
     interval: 15s
+    labels:
+      environment: {{ENVIRONMENT}}
+      project: {{PROJECT}}
