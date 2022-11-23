@@ -1,1 +1,1 @@
-FROM alpine:latest
+FROM snyk/driftctl:v0.38.1
