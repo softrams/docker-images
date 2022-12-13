@@ -1,7 +1,3 @@
-FROM alpine:3.15.0
+FROM alpine:3.15
 
-
-ENV WORKSPACE="."
-#install psql client
-USER root
-RUN apk add postgresql-client && apk add jq
+RUN apk add --no-cache wget
