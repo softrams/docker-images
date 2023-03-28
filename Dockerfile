@@ -1,2 +1,2 @@
-FROM sonarqube:9-community
+FROM sonarqube:8-community
 
