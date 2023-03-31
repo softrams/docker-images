@@ -4,7 +4,7 @@ RUN apt-get update && apt-get -y install
 
 RUN curl -SsL https://downloads.gauge.org/stable | sh
 
-RUN apt-get install -y wget awscli python python3 maven
+RUN apt-get install -y wget awscli python python3 
 # Install gauge plugins
 RUN gauge install java && \
     gauge install screenshot
