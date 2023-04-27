@@ -1,14 +1,15 @@
 FROM amazon/aws-cli:latest
 
-RUN yum install -y wget \
-    tar \
-    gzip \
+RUN yum install -y \
+    curl \
     git \
+    gzip \
     jq \
     python3 \
+    tar \
+    wget \
     && yum -y clean all \
     && rm -rf /var/cache
 
-RUN wget -N -c https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh \
-    && chmod 755 install.sh \
-    && ./install.sh
+RUN curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh | bash && \
+    curl -L https://raw.githubusercontent.com/warrensbox/tgswitch/release/install.sh | bash
