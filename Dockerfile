@@ -1,4 +1,4 @@
-FROM node:14.15.0
+FROM node:14.20.1
 
 # Install Google Chrome
 RUN apt-get update && \
