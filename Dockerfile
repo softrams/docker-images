@@ -7,6 +7,5 @@ RUN pip3 install --upgrade \
   FixedWidth \
   sqlalchemy \
   snowflake-sqlalchemy \
-  snowflake-snowpark-python \
   redshift_connector \
   teradatasql
