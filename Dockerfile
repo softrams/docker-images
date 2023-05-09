@@ -1,1 +1,1 @@
-FROM node:16.20
+FROM prefecthq/prefect:0.15.11-python3.7
