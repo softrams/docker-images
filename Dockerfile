@@ -1,3 +1,3 @@
 FROM debian:11-slim 
 
-RUN apt update && apt upgrade -y && apt install podman -y
+RUN apt update && apt upgrade -y && apt install podman ca-certificates -y
