@@ -6,3 +6,5 @@ RUN apt-get update && \
     apt install --assume-yes ./google-chrome-stable_current_amd64.deb &&\
     apt install --assume-yes zip rsync
 RUN npm install -g typescript
+RUN useradd -ms /bin/bash user
+USER user
