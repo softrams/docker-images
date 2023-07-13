@@ -1,1 +1,1 @@
-FROM amazon/aws-lambda-provided:al2
+FROM amazon/aws-lambda-provided:latest
