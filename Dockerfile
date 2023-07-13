@@ -1,1 +1,1 @@
-FROM alpine:latest
+FROM amazon/aws-lambda-provided:al2
