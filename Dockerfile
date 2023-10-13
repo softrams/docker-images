@@ -6,6 +6,7 @@ RUN yum install -y wget \
     git \
     jq \
     python3 \
+    boto3 \
     && yum -y clean all \
     && rm -rf /var/cache
 
