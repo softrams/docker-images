@@ -1,15 +1,5 @@
-FROM amazon/aws-cli:latest
-
-RUN yum install -y wget \
-    tar \
-    gzip \
-    git \
-    jq \
-    python3 \
-    boto3 \
-    && yum -y clean all \
-    && rm -rf /var/cache
-
-RUN wget -N -c https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh \
-    && chmod 755 install.sh \
-    && ./install.sh
+FROM public.ecr.aws/docker/library/python:3.11.6-alpine
+RUN pip install boto3 awscli
+RUN apt-get update && \
+    apt-get install -y curl make && \
+    apt-get clean
