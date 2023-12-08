@@ -1,1 +1,1 @@
-FROM node:20.2.0
+FROM node:20.10.0
