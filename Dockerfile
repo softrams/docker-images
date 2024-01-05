@@ -1,1 +1,2 @@
-FROM amazon/aws-lambda-provided:latest
+FROM tomcat:9.0.84-jre11
+
