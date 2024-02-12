@@ -7,4 +7,4 @@ RUN apt-get update && \
     libgbm-dev \
     ./google-chrome-stable_current_amd64.deb &&\
     rm google-chrome-stable_current_amd64.deb &&\
-    npm install -g @gauge/cli@v1.5.5
+    npm install -g @getgauge/cli@v1.5.5
