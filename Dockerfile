@@ -1,2 +1,3 @@
-FROM public.ecr.aws/docker/library/python:3.11.6-alpine
-RUN pip install boto3 awscli
+FROM ghcr.io/terraform-linters/tflint:v0.50.3
+ADD .tflint.hcl .
+RUN tflint --init
