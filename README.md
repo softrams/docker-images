@@ -1,2 +1,2 @@
 # terraform-ci
-This extends tfswitch-latest to add scanners and harden the image
+This extends tfswitch-latest to harden the image.
