@@ -1,4 +1,2 @@
-# docker-images
-Repo to build images and host them on Github
-
-* Each branch refers to a different docker image.
+# terraform-ci
+This extends tfswitch-latest to add scanners and harden the image
