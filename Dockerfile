@@ -97,7 +97,7 @@ RUN set -ex \
     | sort -u \
     | xargs -r apt-mark manual \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && apt update && apt install git zip curl xz -y \
+  && apt update && apt install git zip curl xz-utils -y \
   # smoke test
   && yarn --version \
   && rm -rf /tmp/*
