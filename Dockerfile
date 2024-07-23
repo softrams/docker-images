@@ -11,5 +11,4 @@ RUN apt-get update && \
 
 RUN useradd -ms /bin/bash gauge
 USER gauge
-WORKDIR /gauge
 
