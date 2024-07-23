@@ -1,4 +1,4 @@
-FROM node:18.11.0
+FROM node:18.20
 
 # Install Google Chrome
 RUN apt-get update && \
@@ -7,4 +7,9 @@ RUN apt-get update && \
     libgbm-dev \
     ./google-chrome-stable_current_amd64.deb &&\
     rm google-chrome-stable_current_amd64.deb &&\
-    npm install -g @getgauge/cli@v1.5.5
+    npm install -g @getgauge/cli
+
+RUN useradd -ms /bin/bash gauge
+USER gauge
+WORKDIR /gauge
+
