@@ -9,6 +9,4 @@ RUN apt-get update && \
     rm google-chrome-stable_current_amd64.deb &&\
     npm install -g @getgauge/cli
 
-RUN useradd -ms /bin/bash gauge
-USER gauge
 
