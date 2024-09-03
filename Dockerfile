@@ -1,4 +1,4 @@
-FROM node:18.20
+FROM node:20.17
 
 # Install Google Chrome
 RUN apt-get update && \
