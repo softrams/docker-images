@@ -6,6 +6,7 @@ RUN apt-get update && \
     apt install --assume-yes \
     libgbm-dev \
     rsync \
+    zip \
     ./google-chrome-stable_current_amd64.deb &&\
     rm google-chrome-stable_current_amd64.deb &&\
     npm install -g @getgauge/cli
