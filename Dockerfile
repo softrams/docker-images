@@ -1,7 +1,7 @@
 FROM alpine:3.20
 
 RUN apk update && \
-apk add --no-cache ansible curl git && \
+apk add --no-cache ansible curl git openssh && \
 rm -rf /tmp/* && \
 rm -rf /var/cache/apk/*
 
