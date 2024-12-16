@@ -26,9 +26,6 @@ RUN mkdir -p /opt/oracle && \
     sh -c "echo /opt/oracle/instantclient_21_4 > /etc/ld.so.conf.d/oracle-instantclient.conf" && \
     ldconfig
 
-# Commented out to verify if needed
-# RUN cp /usr/share/zoneinfo/America/New_York /etc/localtime
-
 # Set a custom npm install location so that Gauge, Taiko and dependencies can be
 # installed without root privileges
 ENV NPM_CONFIG_PREFIX=/home/gauge/.npm-packages
