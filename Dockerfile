@@ -16,12 +16,12 @@ RUN apt-get update \
      && apt-get update \
      && apt-get install -y google-chrome-stable \
      && apt-get install -y unzip \
-     mkdir -p /opt/oracle && \
-     cd /opt/oracle && \
-     wget https://download.oracle.com/otn_software/linux/instantclient/214000/instantclient-basic-linux.x64-21.4.0.0.0dbru.zip && \
-     unzip instantclient-basic-linux.x64-21.4.0.0.0dbru.zip && \
-     apt-get install -y libaio1 && \
-     sh -c "echo /opt/oracle/instantclient_21_4 > /etc/ld.so.conf.d/oracle-instantclient.conf" && \
-     ldconfig \
-     npm install -g @getgauge/cli
+     && mkdir -p /opt/oracle \
+     && cd /opt/oracle \
+     && wget https://download.oracle.com/otn_software/linux/instantclient/214000/instantclient-basic-linux.x64-21.4.0.0.0dbru.zip \
+     && unzip instantclient-basic-linux.x64-21.4.0.0.0dbru.zip \
+     && apt-get install -y libaio1 \
+     && sh -c "echo /opt/oracle/instantclient_21_4 > /etc/ld.so.conf.d/oracle-instantclient.conf" \
+     && ldconfig \
+     && npm install -g @getgauge/cli
 
