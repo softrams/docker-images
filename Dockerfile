@@ -50,8 +50,4 @@ RUN groupadd -r gauge && useradd -r -g gauge -G audio,video gauge && \
 
 USER gauge
 
-RUN npm install -g @getgauge/cli \
-    && npm install \
-    && gauge install \
-    && gauge install screenshot \
-    && gauge config check_updates false
+RUN npm install -g @getgauge/cli
