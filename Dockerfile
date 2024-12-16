@@ -21,8 +21,8 @@ RUN apt-get update && \
     && npm install -g @getgauge/cli \
     # && npm install \
     # && gauge install \
-    && gauge install screenshot \
-    && gauge config check_updates false
+    # && gauge install screenshot \
+    # && gauge config check_updates false
     
 # Install Oracle Client
 RUN mkdir -p /opt/oracle && \
