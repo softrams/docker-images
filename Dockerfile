@@ -15,39 +15,13 @@ RUN apt-get update \
      && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
      && apt-get update \
      && apt-get install -y google-chrome-stable \
-     && apt-get install -y unzip
+     && apt-get install -y unzip \
+     mkdir -p /opt/oracle && \
+     cd /opt/oracle && \
+     wget https://download.oracle.com/otn_software/linux/instantclient/214000/instantclient-basic-linux.x64-21.4.0.0.0dbru.zip && \
+     unzip instantclient-basic-linux.x64-21.4.0.0.0dbru.zip && \
+     apt-get install -y libaio1 && \
+     sh -c "echo /opt/oracle/instantclient_21_4 > /etc/ld.so.conf.d/oracle-instantclient.conf" && \
+     ldconfig \
+     npm install -g @getgauge/cli
 
-# Install Oracle Client
-RUN mkdir -p /opt/oracle && \
-    cd /opt/oracle && \
-    wget https://download.oracle.com/otn_software/linux/instantclient/214000/instantclient-basic-linux.x64-21.4.0.0.0dbru.zip && \
-    unzip instantclient-basic-linux.x64-21.4.0.0.0dbru.zip && \
-    apt-get install -y libaio1 && \
-    sh -c "echo /opt/oracle/instantclient_21_4 > /etc/ld.so.conf.d/oracle-instantclient.conf" && \
-    ldconfig
-
-# Commented out to verify if needed
-# RUN cp /usr/share/zoneinfo/America/New_York /etc/localtime
-
-# Set a custom npm install location so that Gauge, Taiko and dependencies can be
-# installed without root privileges
-ENV NPM_CONFIG_PREFIX=/home/gauge/.npm-packages
-ENV PATH="${NPM_CONFIG_PREFIX}/bin:${PATH}"
-# ENV ENV_ARGS = "--verbose"
-
-# Add the Taiko browser arguments
-ENV TAIKO_BROWSER_ARGS=--no-sandbox,--start-maximized,--disable-dev-shm-usage
-ENV headless_chrome=true
-ENV TAIKO_SKIP_DOCUMENTATION=true
-
-# Set working directory
-WORKDIR /gauge
-
-# Create an unprivileged user to run Taiko tests
-RUN groupadd -r gauge && useradd -r -g gauge -G audio,video gauge && \
-   mkdir -p /home/gauge/.npm-packages/lib && \
-   chown -R gauge:gauge /home/gauge /gauge
-
-USER gauge
-
-RUN npm install -g @getgauge/cli
