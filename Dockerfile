@@ -20,7 +20,7 @@ RUN apt-get update && \
     && rm google-chrome-stable_current_amd64.deb \
     && npm install -g @getgauge/cli \
     # && npm install \
-    && gauge install \
+    # && gauge install \
     && gauge install screenshot \
     && gauge config check_updates false
     
