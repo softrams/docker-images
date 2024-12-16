@@ -39,3 +39,19 @@ ENV PATH="${NPM_CONFIG_PREFIX}/bin:${PATH}"
 ENV TAIKO_BROWSER_ARGS=--no-sandbox,--start-maximized,--disable-dev-shm-usage
 ENV headless_chrome=true
 ENV TAIKO_SKIP_DOCUMENTATION=true
+
+# Set working directory
+WORKDIR /gauge
+
+# Create an unprivileged user to run Taiko tests
+RUN groupadd -r gauge && useradd -r -g gauge -G audio,video gauge && \
+   mkdir -p /home/gauge/.npm-packages/lib && \
+   chown -R gauge:gauge /home/gauge /gauge
+
+USER gauge
+
+RUN npm install -g @getgauge/cli \
+    && npm install \
+    && gauge install \
+    && gauge install screenshot \
+    && gauge config check_updates false
