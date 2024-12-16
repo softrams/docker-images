@@ -19,10 +19,10 @@ RUN apt-get update && \
     ./google-chrome-stable_current_amd64.deb \
     && rm google-chrome-stable_current_amd64.deb \
     && npm install -g @getgauge/cli \
-    && npm install \
-    # && gauge install \
-    # && gauge install screenshot \
-    # && gauge config check_updates false
+    # && npm install \
+    && gauge install \
+    && gauge install screenshot \
+    && gauge config check_updates false
     
 # Install Oracle Client
 RUN mkdir -p /opt/oracle && \
