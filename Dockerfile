@@ -40,9 +40,7 @@ ENV TAIKO_SKIP_DOCUMENTATION=true
 WORKDIR /gauge
 
 # Create an unprivileged user to run Taiko tests
-RUN groupadd -r gauge && useradd -r -g gauge -G audio,video gauge && \
-   mkdir -p /home/gauge/.npm-packages/lib && \
-   chown -R gauge:gauge /home/gauge /gauge
+RUN mkdir -p /home/gauge/.npm-packages/lib
 
 RUN npm install -g @getgauge/cli \
     && gauge install screenshot \
