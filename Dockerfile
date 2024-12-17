@@ -44,8 +44,6 @@ RUN groupadd -r gauge && useradd -r -g gauge -G audio,video gauge && \
    mkdir -p /home/gauge/.npm-packages/lib && \
    chown -R gauge:gauge /home/gauge /gauge
 
-USER gauge
-
 RUN npm install -g @getgauge/cli \
     && gauge install screenshot \
     && gauge config check_updates false
