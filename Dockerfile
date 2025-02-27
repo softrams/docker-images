@@ -13,8 +13,7 @@ RUN apt-get update && apt-get install -y \
     libappindicator3-1 \
     libayatana-appindicator3-1 \
     python3 \
-    python3-pip \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    python3-pip
 
 # Install Jinja2 CLI using python3 -m pip to avoid potential pip3 issues
 RUN python3 -m pip install --no-cache-dir jinja2-cli
