@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip
 
-RUN pip3 install jinja2-cli jinja-cli
+RUN pip3 install jinja2-cli
 
 # Install Google Chrome with proper dependency handling
 RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
