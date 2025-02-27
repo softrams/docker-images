@@ -1,10 +1,7 @@
 FROM node:20.17
 
-# Ensure the system is updated
-RUN apt-get update && apt-get upgrade -y
-
-# Install required system dependencies
-RUN apt-get install -y \
+# Ensure dependencies are installed before Chrome
+RUN apt-get update && apt-get install -y \
     wget \
     curl \
     libgbm-dev \
@@ -13,11 +10,10 @@ RUN apt-get install -y \
     fonts-liberation \
     xdg-utils \
     libasound2 \
-    libappindicator3-1 \
-    libayatana-appindicator3-1 \
-    python3 \
-    python3-pip \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    libappindicator3-1 || apt-get install -y libayatana-appindicator3-1 \
+    && apt-get install -y python3-pip \
+    && pip3 install --upgrade jinja2-cli \
+    && apt-get clean
 
 # Install Jinja CLI via pip
 RUN pip3 install --no-cache-dir jinja-cli
