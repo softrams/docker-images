@@ -16,7 +16,8 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --no-cache-dir jinja2-cli
+# Install Jinja2 CLI using python3 -m pip to avoid potential pip3 issues
+RUN python3 -m pip install --no-cache-dir jinja2-cli
 
 # Install Google Chrome with proper dependency handling
 RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
