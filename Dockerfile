@@ -1,7 +1,10 @@
 FROM node:20.17
 
-# Ensure dependencies are installed before Chrome
-RUN apt-get update && apt-get install -y \
+# Ensure the system is updated
+RUN apt-get update && apt-get upgrade -y
+
+# Install required system dependencies
+RUN apt-get install -y \
     wget \
     curl \
     libgbm-dev \
@@ -13,9 +16,11 @@ RUN apt-get update && apt-get install -y \
     libappindicator3-1 \
     libayatana-appindicator3-1 \
     python3 \
-    python3-pip && \
-    pip3 install --upgrade jinja-cli && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    python3-pip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Jinja CLI via pip
+RUN pip3 install --no-cache-dir jinja-cli
 
 # Install Google Chrome with proper dependency handling
 RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
