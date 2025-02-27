@@ -7,11 +7,12 @@ RUN apt-get update && apt-get install -y \
     libgbm-dev \
     zip \
     rsync \
-    jinja-cli \
     fonts-liberation \
     xdg-utils \
     libasound2 \
     libappindicator3-1 || apt-get install -y libayatana-appindicator3-1 \
+    && apt-get install -y python3-pip \
+    && pip3 install --upgrade jinja-cli \
     && apt-get clean
 
 # Install Google Chrome with proper dependency handling
