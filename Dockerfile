@@ -10,13 +10,13 @@ RUN apt-get update && apt-get install -y \
     fonts-liberation \
     xdg-utils \
     libasound2 \
-    libappindicator3-1 || apt-get install -y libayatana-appindicator3-1 \
-    && apt-get install -y python3-pip \
-    && pip3 install --upgrade jinja2-cli \
-    && apt-get clean
+    libappindicator3-1 \
+    libayatana-appindicator3-1 \
+    python3 \
+    python3-pip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Jinja CLI via pip
-RUN pip3 install --no-cache-dir jinja-cli
+RUN pip3 install --no-cache-dir jinja2-cli
 
 # Install Google Chrome with proper dependency handling
 RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
