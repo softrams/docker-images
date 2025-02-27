@@ -9,10 +9,9 @@ RUN apt-get update && \
     rsync \
     python3 \
     python3-pip \
-    boto3 \
-    jinja-cli \
     ./google-chrome-stable_current_amd64.deb &&\
     rm google-chrome-stable_current_amd64.deb &&\
     npm install -g @getgauge/cli
+RUN pip3 install ansible boto3 jinja-cli
 
 
