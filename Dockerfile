@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Install jinja2 using pip
-RUN pip3 install --no-cache-dir jinja2
+RUN pip3 install jinja2
 
 # Install Google Chrome with proper dependency handling
 RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
