@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     rsync \
     python3 \
     python3-pip \
+    python-jinja2 \
     fonts-liberation \
     xdg-utils \
     libasound2 \
@@ -16,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Install jinja2 using pip
-RUN pip install --no-cache-dir jinja2-cli
+RUN pip3 install --no-cache-dir jinja2
 
 # Install Google Chrome with proper dependency handling
 RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
