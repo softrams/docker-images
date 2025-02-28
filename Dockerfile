@@ -7,15 +7,14 @@ RUN apt-get update && apt-get install -y \
     libgbm-dev \
     zip \
     rsync \
+    python3 \
+    python3-pip \
+    jinja2-cli \
     fonts-liberation \
     xdg-utils \
     libasound2 \
-    libappindicator3-1 \
-    libayatana-appindicator3-1 \
-    python3 \
-    python3-pip
-
-RUN pip3 install jinja2-cli
+    libappindicator3-1 || apt-get install -y libayatana-appindicator3-1 \
+    && apt-get clean
 
 # Install Google Chrome with proper dependency handling
 RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
@@ -28,7 +27,3 @@ RUN npm install -g @getgauge/cli
 
 # Clean up
 RUN rm -rf /var/lib/apt/lists/*
-
-
-
-
