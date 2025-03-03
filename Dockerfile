@@ -7,9 +7,6 @@ RUN apt-get update && apt-get install -y \
     libgbm-dev \
     zip \
     rsync \
-    python3 \
-    python3-pip \
-    python3-jinja2 \
     fonts-liberation \
     xdg-utils \
     libasound2 \
@@ -24,6 +21,9 @@ RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com
 
 # Install Gauge CLI
 RUN npm install -g @getgauge/cli
+
+# Install Mustache CLI
+RUN npm install -g mustache
 
 # Clean up
 RUN rm -rf /var/lib/apt/lists/*
