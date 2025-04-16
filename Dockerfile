@@ -1,7 +1,4 @@
-FROM alpine/ansible:2.17.0
-
-# Install python/pip
-ENV PYTHONUNBUFFERED=1
-RUN apk add --update --no-cache python3 py3-pip py3-boto3 aws-cli && ln -sf python3 /usr/bin/python
-RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
+FROM public.ecr.aws/docker/library/python:3.11.6-alpine
+RUN pip install boto3 awscli requests
+RUN 'python3 -m pip install --user ansible && \
+    python3 -m pip install --user ansible-core'
