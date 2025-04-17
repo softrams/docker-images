@@ -1,6 +1,10 @@
 FROM alpine/ansible:latest
 
-RUN apk upgrade --no-cache && \ 
-    apk add --no-cache py3-botocore py3-boto3 aws-cli
-RUN ansible-galaxy collection install community.aws
+RUN apk --no-cache add --update wget zip unzip python3 py3-pip bash aws-cli && \
+    apk --no-cache --update add --virtual build-dependencies python3-dev && \
+    rm /usr/lib/python3.12/EXTERNALLY-MANAGED && \
+    pip3 install --upgrade cffi && \
+    pip3 install ansible==9.1.0 && \
+    pip3 install boto3 && \
+    apk del build-dependencies
      
