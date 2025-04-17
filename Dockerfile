@@ -1,7 +1,7 @@
 FROM alpine/ansible:2.17.0
 
-RUN apk add python3
-RUN apk add --no-cache aws-cli \
-    && ansible-galaxy collection install community.aws \
-    && pip3 install --user boto3 \
-    && pip3 install --user botocore
+RUN apk upgrade --no-cache \ 
+    apk --no-cache add python3 botocore boto3 aws-cli
+RUN pip3 ugrade  && \
+    ansible-galaxy collection install community.aws
+     
