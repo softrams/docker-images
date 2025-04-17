@@ -1,4 +1,4 @@
-FROM alpine/ansible:2.17.0
+FROM alpine/ansible:latest
 
 RUN apk upgrade --no-cache && \ 
     apk add --no-cache python3 py3-botocore py3-boto3 aws-cli
