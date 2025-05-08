@@ -11,6 +11,8 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       -
         name: Checkout
