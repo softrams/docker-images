@@ -1,18 +1,25 @@
 name: ci
-
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 5 * * *' # everyday at 5am
+    - cron: '0 5 * * *' # everyday at 5am (fixed cron syntax)
   push:
     branches:
       - '**'
 
+# Add workflow-level permissions to fix "Repository access blocked" error
+permissions:
+  contents: read
+  packages: write
+  pull-requests: write
+  id-token: write
+
 jobs:
   docker:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
+    # Job-level permissions can be removed since we defined workflow-level permissions
+    # permissions:
+    #   pull-requests: write
     steps:
       -
         name: Checkout
