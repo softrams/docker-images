@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y curl ca-certificates gnupg \
   && apt-get update && apt-get install -y nodejs \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install Mustache CLI
+RUN npm install -g mustache
+
 # Set environment variable for consistency
 ENV NODE_VERSION 20.12.2
 
