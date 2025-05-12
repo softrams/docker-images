@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y curl ca-certificates gnupg \
 # Install Mustache CLI
 RUN npm install -g mustache
 
+RUN npm install -g typescript
+
 # Set environment variable for consistency
 ENV NODE_VERSION 20.12.2
 
