@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y curl ca-certificates gnupg \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set environment variable for consistency
-ENV NODE_VERSION 20
+ENV NODE_VERSION 20.12.2
 
 RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
