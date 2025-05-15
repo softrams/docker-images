@@ -17,17 +17,27 @@ RUN npm install -g mustache
 
 RUN npm install -g typescript
 
-# Install Google Chrome and other required packages
-RUN apt-get update && \
-    apt-get install -y wget curl gnupg && \
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt-get install -y ./google-chrome-stable_current_amd64.deb || apt --fix-broken install -y && \
-    apt-get install -y libgbm-dev zip rsync && \
-    rm google-chrome-stable_current_amd64.deb && \
-    npm install -g @getgauge/cli
+# Ensure dependencies are installed before Chrome
+RUN apt-get update && apt-get install -y \
+    wget \
+    curl \
+    libgbm-dev \
+    zip \
+    rsync \
+    fonts-liberation \
+    xdg-utils \
+    libasound2 \
+    libappindicator3-1 || apt-get install -y libayatana-appindicator3-1 \
+    && apt-get clean
 
-# Set CHROME_BIN environment variable
-ENV CHROME_BIN=/usr/bin/google-chrome
+# Install Google Chrome with proper dependency handling
+RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt-get update && \
+    dpkg -i /tmp/google-chrome-stable_current_amd64.deb || apt-get -f install -y && \
+    rm -f /tmp/google-chrome-stable_current_amd64.deb
+
+# Install Gauge CLI
+RUN npm install -g @getgauge/cli
 
 # Set environment variable for consistency
 ENV NODE_VERSION 20.12.2
