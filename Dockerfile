@@ -17,17 +17,17 @@ RUN npm install -g mustache
 
 RUN npm install -g typescript
 
-# Install Google Chrome
+# Install Google Chrome and other required packages
 RUN apt-get update && \
     apt-get install -y wget curl gnupg && \
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt-get install --assume-yes \
-        libgbm-dev \
-        zip \
-        rsync \
-        ./google-chrome-stable_current_amd64.deb && \
+    apt-get install -y ./google-chrome-stable_current_amd64.deb || apt --fix-broken install -y && \
+    apt-get install -y libgbm-dev zip rsync && \
     rm google-chrome-stable_current_amd64.deb && \
     npm install -g @getgauge/cli
+
+# Set CHROME_BIN environment variable
+ENV CHROME_BIN=/usr/bin/google-chrome
 
 # Set environment variable for consistency
 ENV NODE_VERSION 20.12.2
