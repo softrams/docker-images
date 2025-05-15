@@ -17,6 +17,17 @@ RUN npm install -g mustache
 
 RUN npm install -g typescript
 
+# Install Google Chrome
+RUN apt-get update && \
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt install --assume-yes \
+    libgbm-dev \
+    zip \
+    rsync \
+    ./google-chrome-stable_current_amd64.deb &&\
+    rm google-chrome-stable_current_amd64.deb &&\
+    npm install -g @getgauge/cli
+
 # Set environment variable for consistency
 ENV NODE_VERSION 20.12.2
 
