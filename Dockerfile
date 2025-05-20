@@ -39,18 +39,22 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Wine Mono and Gecko manually
+# Set Wine environment variables
+ENV WINEARCH=win64
+ENV WINEDLLOVERRIDES=mscoree=d;mshtml=d
+
+# Download Wine Mono and Gecko installers
 RUN mkdir -p /opt/wine-installer && \
     cd /opt/wine-installer && \
+    wget https://dl.winehq.org/wine/wine-mono/8.1.0/wine-mono-8.1.0-x86.msi && \
     wget https://dl.winehq.org/wine/wine-gecko/2.47.2/wine-gecko-2.47.2-x86.msi && \
-    wget https://dl.winehq.org/wine/wine-gecko/2.47.2/wine-gecko-2.47.2-x86_64.msi && \
-    wget https://dl.winehq.org/wine/wine-mono/7.4.0/wine-mono-7.4.0-x86.msi
+    wget https://dl.winehq.org/wine/wine-gecko/2.47.2/wine-gecko-2.47.2-x86_64.msi
 
-# Pre-install Wine Gecko & Mono for default wine prefix
+# Initialize Wine and install Mono and Gecko
 RUN wineboot --init || true && \
-    wine64 uninstaller /silent /install /opt/wine-installer/wine-mono-7.4.0-x86.msi || true && \
-    wine64 uninstaller /silent /install /opt/wine-installer/wine-gecko-2.47.2-x86_64.msi || true && \
-    wine uninstaller /silent /install /opt/wine-installer/wine-gecko-2.47.2-x86.msi || true
+    wine64 msiexec /i /opt/wine-installer/wine-mono-8.1.0-x86.msi /quiet || true && \
+    wine64 msiexec /i /opt/wine-installer/wine-gecko-2.47.2-x86_64.msi /quiet || true && \
+    wine msiexec /i /opt/wine-installer/wine-gecko-2.47.2-x86.msi /quiet || true
 
 # Set environment variables for Xvfb and Wine
 ENV DISPLAY=:99
