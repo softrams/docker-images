@@ -57,7 +57,7 @@ RUN apt-get update && apt-get install -y \
 RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /usr/local/bin/winetricks && \
     chmod +x /usr/local/bin/winetricks
 
-RUN winetricks -q dotnet48 corefonts msxml6 vcrun2015
+RUN xvfb-run --auto-servernum --server-args='-screen 0 1024x768x16' winetricks -q dotnet48 corefonts msxml6 vcrun2015 || true
 
 # Download Wine Mono and Gecko installers
 RUN mkdir -p /opt/wine-installer && \
