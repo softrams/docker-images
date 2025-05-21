@@ -42,6 +42,11 @@ RUN apt-get update && apt-get install -y \
 # Set Wine environment variables
 ENV WINEARCH=win64
 ENV WINEDLLOVERRIDES=mscoree=d;mshtml=d
+ENV WINEPREFIX=/root/.wine64
+
+RUN apt-get update && apt-get install -y winetricks
+
+RUN winetricks -q dotnet48 corefonts msxml6 vcrun2015
 
 # Download Wine Mono and Gecko installers
 RUN mkdir -p /opt/wine-installer && \
@@ -60,6 +65,8 @@ RUN wineboot --init || true && \
 ENV DISPLAY=:99
 ENV WINEDEBUG=-all
 ENV WINEDLLOVERRIDES=mscoree=d
+
+RUN wine64 /root/.cache/electron-builder/wix/wix-4.0.0.5512.2/candle.exe --version || true
 
 # Install Google Chrome
 RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
