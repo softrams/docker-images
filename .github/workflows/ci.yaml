@@ -1,9 +1,7 @@
 name: ci
 
-permissions:
-  contents: read
-  packages: write
-
+env:
+  TOKEN: ${{ secrets.DOCKER_IMAGES_PAT }}
 on:
   workflow_dispatch:
   schedule:
