@@ -8,6 +8,11 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: write
+  packages: write
+
+
 jobs:
   docker:
     env:
