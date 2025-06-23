@@ -15,6 +15,13 @@ RUN apt-get update && apt-get install -y \
     libappindicator3-1 || apt-get install -y libayatana-appindicator3-1 \
     && apt-get clean
 
+RUN apt-get update && apt-get install -y \
+    wget curl gnupg unzip \
+    libxss1 libappindicator3-1 libasound2 \
+    libatk-bridge2.0-0 libgtk-3-0 libnss3 libx11-xcb1 \
+    fonts-liberation xdg-utils \
+    libgcrypt20
+
 # Install Google Chrome with proper dependency handling
 RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
     apt-get update && \
