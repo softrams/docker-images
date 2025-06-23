@@ -21,7 +21,7 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.DOCKER_IMAGES_PAT }}
       -
@@ -36,6 +36,7 @@ jobs:
           tags: |
             type=schedule
             type=ref,event=branch
+          token: ${{ secrets.DOCKER_IMAGES_PAT }}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
