@@ -22,6 +22,8 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.DOCKER_IMAGES_PAT }}
       -
         name: Docker meta
         id: meta
