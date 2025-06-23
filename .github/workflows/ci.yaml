@@ -1,6 +1,7 @@
 name: ci
 
 permissions:
+  contents: read
   packages: write
 
 on:
