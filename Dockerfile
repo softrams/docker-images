@@ -1,1 +1,1 @@
-FROM amazon/alpine:latest
+FROM alpine:latest
