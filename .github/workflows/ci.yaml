@@ -9,9 +9,9 @@ on:
       - '**'
 
 # Add permissions needed for GitHub Container Registry
-permissions:
-  contents: read
-  packages: write
+# permissions:
+#   contents: read
+#   packages: write
 
 jobs:
   docker:
