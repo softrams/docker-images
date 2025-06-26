@@ -10,5 +10,6 @@ FROM golang:1-buster
 # However, we need the chromium dependencies installed in the environment. These days, most
 # Dockerfiles just install chrome to get the dependencies.
 RUN apt-get update \
-     && apt-get install -y unzip
+     && apt-get install -y unzip \
+     && apt-get install -y zip
 
