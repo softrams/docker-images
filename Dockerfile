@@ -1,7 +1,6 @@
 FROM node:22
 
 RUN apt update &&\
-    apt install zip -y
+    apt upgrade -y 
 
-
-
+RUN npm install -g @openai/codex
