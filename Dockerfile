@@ -8,5 +8,6 @@ RUN apk --no-cache add --update jq wget zip unzip python3 py3-pip bash aws-cli c
     pip3 install boto3 && \
     pip3 install hvac && \
     pip3 install pywinrm && \
+    pip3 install requests-credssp && \
     apk del build-dependencies
 
