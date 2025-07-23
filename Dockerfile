@@ -1,13 +1,8 @@
 FROM alpine:3.21
 
 RUN apk --no-cache add --update jq wget zip unzip python3 py3-pip bash aws-cli curl && \
-    apk --no-cache --update add --virtual build-dependencies python3-dev && \
+    apk --no-cache --update add --virtual build-dependencies python3-dev build-base libffi-dev openssl-dev && \
     rm /usr/lib/python3.12/EXTERNALLY-MANAGED && \
-    pip3 install --upgrade cffi && \
-    pip3 install ansible==9.1.0 && \
-    pip3 install boto3 && \
-    pip3 install hvac && \
-    pip3 install pywinrm && \
-    pip3 install requests-credssp && \
+    pip3 install --upgrade pip cffi && \
+    pip3 install ansible==9.1.0 boto3 hvac pywinrm requests-credssp && \
     apk del build-dependencies
-
