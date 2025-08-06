@@ -4,7 +4,7 @@
 # 	docker run  --rm -it -v ${PWD}/reports:/gauge/reports gauge-taiko
 
 # This image uses the official node base image.
-FROM node:18
+FROM node:22
 
 # The Taiko installation downloads and installs the chromium required to run the tests.
 # However, we need the chromium dependencies installed in the environment. These days, most
