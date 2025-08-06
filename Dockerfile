@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:20.11
 
 ARG GH_CLI_VERSION=2.76.0
 
