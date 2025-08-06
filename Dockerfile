@@ -8,4 +8,10 @@ RUN wget https://github.com/cli/cli/releases/download/v${GH_CLI_VERSION}/gh_${GH
     apt install ./gh_${GH_CLI_VERSION}_linux_amd64.deb &&\
     rm gh_${GH_CLI_VERSION}_linux_amd64.deb 
 
-RUN npm install -g @openai/codex@0.9.0
+RUN npm install -g @anthropic-ai/claude-code@1.0.69
+
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &&\
+    unzip awscliv2.zip && \
+    ./aws/install &&\
+    rm -rf aws &&\
+    rm awscliv2.zip
