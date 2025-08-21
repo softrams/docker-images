@@ -5,7 +5,7 @@ ARG GH_CLI_VERSION=2.76.0
 # Install Google Chrome
 RUN apt-get update && \
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt install --assume-yes ./google-chrome-stable_current_amd64.deb zip jq wget ripgrep
+    apt install --assume-yes ./google-chrome-stable_current_amd64.deb zip jq wget ripgrep python3-boto3
 
 RUN wget https://github.com/cli/cli/releases/download/v${GH_CLI_VERSION}/gh_${GH_CLI_VERSION}_linux_amd64.deb &&\
     apt install ./gh_${GH_CLI_VERSION}_linux_amd64.deb &&\
