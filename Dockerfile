@@ -1,63 +1,52 @@
-FROM python:3.11-slim
+# Extend existing terraform-ci image
+FROM ghcr.io/softrams/docker-images:terraform-ci
 
 # Metadata
 LABEL maintainer="Softrams DevOps <devops@softrams.com>"
-LABEL description="Python 3.11 with security scanning tools"
+LABEL description="Terraform CI with enhanced security scanning"
 LABEL version="1.0.0"
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
+# Install Python and security tools
+RUN apk add --no-cache \
+    python3 \
+    py3-pip \
     curl \
-    wget \
-    build-essential \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+    wget
 
-# Upgrade pip and install security tools
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir \
-    bandit[toml] \
-    safety \
-    pip-audit \
-    semgrep \
-    pipenv \
-    poetry \
-    flake8 \
-    flake8-bandit \
-    flake8-bugbear \
-    pep8-naming \
-    requests \
-    pyyaml
+# Install Checkov for IaC security
+RUN pip3 install --no-cache-dir checkov
 
-# Create security scripts directory
-RUN mkdir -p /opt/security-scripts
+# Install Trivy for Terraform scanning
+RUN TRIVY_VERSION=$(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep -o '"tag_name": "[^"]*"' | cut -d'"' -f4) && \
+    wget -O trivy.tar.gz "https://github.com/aquasecurity/trivy/releases/download/${TRIVY_VERSION}/trivy_${TRIVY_VERSION#v}_Linux-64bit.tar.gz" && \
+    tar -xzf trivy.tar.gz && \
+    mv trivy /usr/local/bin/ && \
+    rm trivy.tar.gz
 
-# Create Python security scan script
-RUN echo '#!/bin/bash\n\
+# Install tfsec (legacy support)
+RUN TFSEC_VERSION=$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep -o '"tag_name": "[^"]*"' | cut -d'"' -f4) && \
+    wget -O tfsec "https://github.com/aquasecurity/tfsec/releases/download/${TFSEC_VERSION}/tfsec-linux-amd64" && \
+    chmod +x tfsec && \
+    mv tfsec /usr/local/bin/
+
+# Create Terraform security scan script
+RUN echo '#!/bin/sh\n\
 set -e\n\
-echo "Running Bandit security scan..."\n\
-bandit -r . -f json -o bandit-results.json || true\n\
-echo "Running Safety vulnerability check..."\n\
-safety check --json --output safety-results.json || true\n\
-echo "Running pip-audit..."\n\
-pip-audit --format=json --output=pip-audit-results.json || true\n\
-echo "Python security scan completed"\n\
-' > /opt/security-scripts/python-security-scan.sh && \
-    chmod +x /opt/security-scripts/python-security-scan.sh
-
-# Add to PATH
-ENV PATH="/opt/security-scripts:${PATH}"
-
-# Set working directory
-WORKDIR /workspace
+echo "Running Checkov IaC security scan..."\n\
+checkov -d . --framework terraform --output json --output-file checkov-results.json || true\n\
+echo "Running Trivy Terraform scan..."\n\
+trivy config . --format json --output trivy-terraform-results.json || true\n\
+echo "Running tfsec scan..."\n\
+tfsec . --format json --out tfsec-results.json || true\n\
+echo "Terraform security scan completed"\n\
+' > /usr/local/bin/terraform-security-scan.sh && \
+    chmod +x /usr/local/bin/terraform-security-scan.sh
 
 # Verify installations
-RUN python --version && \
-    pip --version && \
-    bandit --version && \
-    safety --version && \
-    pip-audit --version
+RUN terraform version && \
+    checkov --version && \
+    trivy --version && \
+    tfsec --version
 
 # Default command
-CMD ["/bin/bash"]
+CMD ["/bin/sh"]
