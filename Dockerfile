@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y \
     fonts-liberation \
     xdg-utils \
     libasound2 \
-    jq \
     python \
     libappindicator3-1 || apt-get install -y libayatana-appindicator3-1 \
     && apt-get clean
@@ -37,8 +36,5 @@ RUN export TAIKO_SKIP_CHROMIUM_DOWNLOAD=true && \
 
 # Install AWS CLI
 RUN apt update && \
-    apt install python-dev-is-python3 python3-pip -y && \
-    pip3 install awscli --break-system-packages
-
-# # Clean up
-# RUN rm -rf /var/lib/apt/lists/*
+    apt install python-dev-is-python3 python3-pip jq -y && \
+    pip3 install awscli --break-system-packages  
