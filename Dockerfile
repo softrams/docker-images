@@ -34,19 +34,19 @@ RUN  gauge install html-report --version 4.1.4 && \
 RUN export TAIKO_SKIP_CHROMIUM_DOWNLOAD=true && \
      npm install -g taiko
 
-# Install Mustache CLI
-RUN npm install -g mustache
+# # Install Mustache CLI
+# RUN npm install -g mustache
 
 
-# Install AWS CLI
-RUN apt update && \
-    apt install python-dev-is-python3 python3-pip -y && \
-    pip3 install awscli --break-system-packages
+# # Install AWS CLI
+# RUN apt update && \
+#     apt install python-dev-is-python3 python3-pip -y && \
+#     pip3 install awscli --break-system-packages
 
-# Install Java
-RUN apt update && \
-    apt install default-jre -y && \
-    apt install default-jdk -y
+# # Install Java
+# RUN apt update && \
+#     apt install default-jre -y && \
+#     apt install default-jdk -y
 
-# Clean up
-RUN rm -rf /var/lib/apt/lists/*
+# # Clean up
+# RUN rm -rf /var/lib/apt/lists/*
