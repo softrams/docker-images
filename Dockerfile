@@ -34,7 +34,8 @@ RUN export TAIKO_SKIP_CHROMIUM_DOWNLOAD=true && \
      npm install -g taiko
 
 
-# Install AWS CLI
-RUN apt update && \
-    apt install python-dev-is-python3 python3-pip jq -y && \
-    pip3 install awscli --break-system-packages  
+# Install AWS CLI and jq
+RUN apt-get update && \
+    apt-get install -y python-dev-is-python3 python3-pip jq && \
+    pip3 install awscli --break-system-packages && \
+    jq --version  
