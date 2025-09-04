@@ -23,6 +23,9 @@ RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com
 # Install Gauge CLI
 RUN npm install -g @getgauge/cli
 
+# Install OpenJDK (Java)
+RUN apt-get update && apt-get install -y openjdk-17-jre-headless && java -version
+
 RUN  gauge install html-report --version 4.1.4 && \
      gauge install java --version 0.9.1 && \
      gauge install screenshot --version 0.1.0 && \
