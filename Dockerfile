@@ -37,7 +37,7 @@ RUN mkdir /var/lib/jenkins \
     zip \
     gifsicle pngquant optipng libjpeg-turbo-utils udev ttf-opensans chromium ca-certificates \
     bash git git-lfs openssh-client openssl procps xvfb fluxbox rsync \
-    && python3 -m ensurepip \
+    && apk add --no-cache py3-pip \
     && rm -r /usr/lib/python*/ensurepip \
     && rm -rf /var/cache/apk/* /tmp/* \
     && pip3 install --upgrade pip \
