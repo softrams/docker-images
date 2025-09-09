@@ -40,16 +40,16 @@ RUN mkdir /var/lib/jenkins \
     && apk add --no-cache py3-pip \
     && rm -r /usr/lib/python*/ensurepip \
     && rm -rf /var/cache/apk/* /tmp/* \
-    && pip3 install --upgrade pip \
-    && pip3 --no-cache-dir install \
-    boto \
-    boto3 \
-    hvac \
-    ruamel.yaml.clib \
-    awscli \
-    gitpython \
-    ansible-lint \
-    pytz \
+        && pip3 install --upgrade pip --break-system-packages \
+        && pip3 --no-cache-dir install --break-system-packages \
+        boto \
+        boto3 \
+        hvac \
+        ruamel.yaml.clib \
+        awscli \
+        gitpython \
+        ansible-lint \
+        pytz \
     && npm install -g @angular/cli \
     && npm install -g @angular-devkit/build-angular \
     && mkdir -p /etc/ansible \
