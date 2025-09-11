@@ -7,7 +7,7 @@ RUN apt update &&\
 RUN apt update && \
     apt install -y python3-pip && \
     pip3 install --upgrade pip --break-system-packages && \
-    pip3 install ansible==2.16.6 awscli --break-system-packages && \
+    pip3 install ansible==2.10.7 awscli --break-system-packages && \
     ansible --version && \
     aws --version
 
