@@ -11,4 +11,7 @@ RUN apt update && \
     ansible --version && \
     aws --version
 
+# Install boto3 and botocore for Ansible AWS modules
+RUN pip3 install boto3 botocore --break-system-packages
+
 RUN npm install -g typescript
