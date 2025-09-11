@@ -51,7 +51,7 @@ RUN mkdir /var/lib/jenkins \
         ansible-lint \
         pytz \
     && npm install -g @angular/cli \
-    && npm install -g typescrip \
+    && npm install -g typescript \
     && npm install -g @angular-devkit/build-angular \
     && mkdir -p /etc/ansible \
     && echo 'localhost' > /etc/ansible/hosts \
