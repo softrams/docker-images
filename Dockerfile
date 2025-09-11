@@ -1,7 +1,7 @@
 FROM node:22
 
 RUN apt update &&\
-    apt install zip git -y
+    apt install zip git jq -y
 
 # Install pip3, ansible, and awscli
 RUN apt update && \
