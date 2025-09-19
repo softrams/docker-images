@@ -23,9 +23,6 @@ RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com
 # Install Gauge CLI
 RUN npm install -g @getgauge/cli
 
-# Install OpenJDK (Java)
-RUN apt-get update && apt-get install -y openjdk-17-jre-headless && java -version
-
 RUN  gauge install html-report --version 4.1.4 && \
      gauge install java --version 0.9.1 && \
      gauge install screenshot --version 0.1.0 && \
@@ -36,6 +33,19 @@ RUN  gauge install html-report --version 4.1.4 && \
 RUN export TAIKO_SKIP_CHROMIUM_DOWNLOAD=true && \
      npm install -g taiko
 
+# Install AWS CLI
+RUN apt-get update && \
+    apt-get install -y python3-pip python3-dev jq && \
+    pip3 install awscli --break-system-packages
+
+# Install GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
+    dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | \
+    tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y gh
 
 # Install AWS CLI and jq
 RUN apt-get update && \
