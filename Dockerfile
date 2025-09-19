@@ -7,3 +7,10 @@ RUN apk --no-cache add --update jq wget zip unzip python3 py3-pip bash aws-cli c
     pip3 install --upgrade pip cffi && \
     pip3 install ansible==9.1.0 boto3 hvac pywinrm requests-credssp && \
     apk del build-dependencies
+
+# Install GitHub CLI (gh)
+RUN wget -q https://github.com/cli/cli/releases/download/v2.51.0/gh_2.51.0_linux_amd64.tar.gz && \
+    tar -xzf gh_2.51.0_linux_amd64.tar.gz && \
+    mv gh_2.51.0_linux_amd64/bin/gh /usr/local/bin/ && \
+    rm -rf gh_2.51.0_linux_amd64* && \
+    gh --version
