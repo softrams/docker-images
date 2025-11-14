@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     fonts-liberation \
     xdg-utils \
     libasound2 \
-    python && \
+    python3 && \
     (apt-get install -y libappindicator3-1 || apt-get install -y libayatana-appindicator3-1) && \
     apt-get clean
 
