@@ -2,6 +2,7 @@ FROM node:22.16.0
 
 # Ensure dependencies are installed before Chrome
 RUN apt-get update && apt-get install -y \
+    bash \
     wget \
     curl \
     libgbm-dev \
@@ -41,4 +42,4 @@ RUN export TAIKO_SKIP_CHROMIUM_DOWNLOAD=true && \
 RUN apt-get update && \
     apt-get install -y python-dev-is-python3 python3-pip jq && \
     pip3 install awscli --break-system-packages && \
-    jq --version  
+    jq --version
