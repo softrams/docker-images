@@ -12,9 +12,9 @@ RUN apt-get update && apt-get install -y \
     fonts-liberation \
     xdg-utils \
     libasound2 \
-    python \
-    libappindicator3-1 || apt-get install -y libayatana-appindicator3-1 \
-    && apt-get clean
+    python && \
+    (apt-get install -y libappindicator3-1 || apt-get install -y libayatana-appindicator3-1) && \
+    apt-get clean
 
 # Install Google Chrome with proper dependency handling
 RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
