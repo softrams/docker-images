@@ -39,8 +39,16 @@ RUN export TAIKO_SKIP_CHROMIUM_DOWNLOAD=true && \
      npm install -g taiko
 
 
-# Install AWS CLI and jq
+# Install AWS CLI, jq, and GitHub CLI
 RUN apt-get update && \
     apt-get install -y python-dev-is-python3 python3-pip jq && \
     pip3 install awscli --break-system-packages && \
     jq --version
+
+# Install GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y gh && \
+    gh --version
