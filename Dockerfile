@@ -19,4 +19,4 @@ RUN chmod +x /usr/bin/gh && gh --version
 
 RUN wget -N -c https://raw.githubusercontent.com/warrensbox/terraform-switcher/master/install.sh \
     && chmod 755 install.sh \
-    && ./install.sh | bash
+    && ./install.sh | bash -s -- 0.13.1308
