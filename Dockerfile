@@ -17,6 +17,6 @@ RUN pip3 install boto3
 COPY --from=maniator/gh:v2.63.0 /usr/bin/gh /usr/bin/gh
 RUN chmod +x /usr/bin/gh && gh --version
 
-RUN wget -N -c https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh \
+RUN wget -N -c https://raw.githubusercontent.com/warrensbox/terraform-switcher/master/install.sh \
     && chmod 755 install.sh \
-    && ./install.sh
+    && ./install.sh | bash
