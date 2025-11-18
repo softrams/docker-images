@@ -7,3 +7,10 @@ RUN apk --no-cache add --update jq wget zip unzip python3 py3-pip bash aws-cli c
     pip3 install --upgrade pip cffi && \
     pip3 install ansible==9.1.0 boto3 hvac pywinrm requests-credssp && \
     apk del build-dependencies
+
+# Install HashiCorp Vault CLI
+RUN wget -q https://releases.hashicorp.com/vault/1.18.3/vault_1.18.3_linux_amd64.zip && \
+    unzip vault_1.18.3_linux_amd64.zip && \
+    mv vault /usr/local/bin/ && \
+    rm vault_1.18.3_linux_amd64.zip && \
+    vault --version
