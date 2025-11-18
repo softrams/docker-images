@@ -14,3 +14,10 @@ RUN wget -q https://github.com/cli/cli/releases/download/v2.51.0/gh_2.51.0_linux
     mv gh_2.51.0_linux_amd64/bin/gh /usr/local/bin/ && \
     rm -rf gh_2.51.0_linux_amd64* && \
     gh --version
+
+# Install HashiCorp Vault CLI
+RUN wget -q https://releases.hashicorp.com/vault/1.18.3/vault_1.18.3_linux_amd64.zip && \
+    unzip vault_1.18.3_linux_amd64.zip && \
+    mv vault /usr/local/bin/ && \
+    rm vault_1.18.3_linux_amd64.zip && \
+    vault --version
