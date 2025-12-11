@@ -26,12 +26,13 @@ RUN npm install -g @getgauge/cli
 # Install OpenJDK (Java)
 RUN apt-get update && apt-get install -y openjdk-17-jre-headless && java -version
 
-RUN  gauge install html-report --version 4.1.4 && \
-     gauge install java --version 0.9.1 && \
+RUN  gauge install html-report --version 4.4.0 && \
+     gauge install java --version 1.0.1 && \
      gauge install screenshot --version 0.1.0 && \
-     gauge install js --version 2.4.0 && \
-     gauge install json-report --version 0.3.7 && \
-     gauge install ts --version 0.1.0
+     gauge install js --version 5.0.1 && \
+     gauge install json-report --version 0.5.3 && \
+     gauge install ts --version 0.1.0 && \
+     gauge install flash --version 0.0.2
 
 RUN export TAIKO_SKIP_CHROMIUM_DOWNLOAD=true && \
      npm install -g taiko
