@@ -10,7 +10,7 @@ RUN yum install -y wget \
     && yum -y clean all \
     && rm -rf /var/cache
 
-RUN pip3 install boto3
+RUN pip3.12 install boto3
 
 RUN wget -N -c https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh \
     && chmod 755 install.sh \
