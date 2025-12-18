@@ -5,8 +5,8 @@ RUN yum install -y wget \
     gzip \
     git \
     jq \
-    python3 \
-    python3-pip \
+    python3.12 \
+    python3.12-pip \
     && yum -y clean all \
     && rm -rf /var/cache
 
