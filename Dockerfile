@@ -19,6 +19,18 @@ RUN wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com
     dpkg -i /tmp/google-chrome-stable_current_amd64.deb || apt-get -f install -y && \
     rm -f /tmp/google-chrome-stable_current_amd64.deb
 
+# Install GitHub CLI
+RUN curl -fsSL https://github.com/cli/cli/releases/download/v2.40.0/gh_2.40.0_linux_amd64.tar.gz -o gh.tar.gz && \
+    tar -xzf gh.tar.gz && \
+    cp gh_2.40.0_linux_amd64/bin/gh /usr/local/bin/ && \
+    chmod +x /usr/local/bin/gh && \
+    rm -rf gh.tar.gz gh_2.40.0_linux_amd64
+
+# Install Python and boto3
+RUN apt-get update && apt-get install -y python3 python3-pip && \
+    pip3 install boto3 --break-system-packages && \
+    apt-get clean
+
 # Install Gauge CLI
 RUN npm install -g @getgauge/cli
 
