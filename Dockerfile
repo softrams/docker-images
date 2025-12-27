@@ -37,6 +37,5 @@ RUN npm install -g @getgauge/cli
 # Install Mustache CLI
 RUN npm install -g mustache
 
-
 # Clean up
 RUN rm -rf /var/lib/apt/lists/*
