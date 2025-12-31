@@ -31,6 +31,9 @@ RUN apt-get update && apt-get install -y python3 python3-pip && \
     pip3 install boto3 --break-system-packages && \
     apt-get clean
 
+# Install pre-commit
+RUN pip3 install pre-commit==4.0.1 --break-system-packages
+
 # Install Gauge CLI
 RUN npm install -g @getgauge/cli
 
