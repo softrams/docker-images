@@ -1,6 +1,6 @@
 FROM alpine:3.21
 
-RUN apk --no-cache add --update jq wget zip unzip python3 py3-pip bash aws-cli curl krb5 && \
+RUN apk --no-cache add --update jq wget zip unzip python3 py3-pip bash aws-cli curl krb5 bind-tools && \
     apk --no-cache --update add --virtual build-dependencies python3-dev build-base libffi-dev openssl-dev && \
     apk --no-cache add jq && \
     rm /usr/lib/python3.12/EXTERNALLY-MANAGED && \
