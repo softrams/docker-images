@@ -4,7 +4,7 @@
 # 	docker run  --rm -it -v ${PWD}/reports:/gauge/reports gauge-taiko
 
 # This image uses the official node base image.
-FROM golang:1-buster
+FROM golang:1.25-bookworm
 
 # The Taiko installation downloads and installs the chromium required to run the tests.
 # However, we need the chromium dependencies installed in the environment. These days, most
