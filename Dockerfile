@@ -1,4 +1,4 @@
-FROM node:20.17
+FROM node:20.19.0
 
 # Ensure dependencies are installed before Chrome
 RUN apt-get update && apt-get install -y \
