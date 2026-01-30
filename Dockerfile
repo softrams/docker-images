@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     libgbm-dev \
     zip \
     rsync \
+    jq \
     fonts-liberation \
     xdg-utils \
     libasound2 \
