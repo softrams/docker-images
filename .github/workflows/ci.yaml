@@ -48,4 +48,11 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
+      -
+        name: Keep scheduled workflows alive
+        uses: gautamkrishnar/keepalive-workflow@master
+        with:
+          committer_username: keepalive-bot
+          committer_email: keepalive-bot@keepalive-bot
+          commit_message: Automated commit by Keepalive Workflow to keep the repository active
+          time_elapsed: 50
