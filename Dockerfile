@@ -1,17 +1,31 @@
-FROM node:20.19
+FROM mcr.microsoft.com/playwright:v1.52.0-noble
 
 ARG GH_CLI_VERSION=2.76.0
 
-RUN apt update && apt install jq wget ripgrep -y
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    jq \
+    wget \
+    unzip \
+    sudo \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://github.com/cli/cli/releases/download/v${GH_CLI_VERSION}/gh_${GH_CLI_VERSION}_linux_amd64.deb &&\
-    apt install ./gh_${GH_CLI_VERSION}_linux_amd64.deb &&\
-    rm gh_${GH_CLI_VERSION}_linux_amd64.deb 
+# Install GitHub CLI (architecture-aware)
+RUN ARCH=$(dpkg --print-architecture) && \
+    wget https://github.com/cli/cli/releases/download/v${GH_CLI_VERSION}/gh_${GH_CLI_VERSION}_linux_${ARCH}.deb && \
+    apt-get update && apt-get install -y ./gh_${GH_CLI_VERSION}_linux_${ARCH}.deb && \
+    rm gh_${GH_CLI_VERSION}_linux_${ARCH}.deb && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g @anthropic-ai/claude-code@1.0.69
-
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &&\
+# Install AWS CLI v2 (architecture-aware)
+RUN ARCH=$(uname -m) && \
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-${ARCH}.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
-    ./aws/install &&\
-    rm -rf aws &&\
-    rm awscliv2.zip
+    ./aws/install && \
+    rm -rf aws awscliv2.zip
+
+# Install Playwright browsers (already included in base image, but ensure latest)
+RUN npx playwright install --with-deps
+
+# Set environment to run Chromium in container
+ENV CI=true
