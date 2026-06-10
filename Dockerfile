@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.52.0-noble
+FROM mcr.microsoft.com/playwright:v1.60.0-noble
 
 ARG GH_CLI_VERSION=2.76.0
 
