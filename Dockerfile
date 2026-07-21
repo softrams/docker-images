@@ -5,5 +5,3 @@ RUN apt update &&\
 
 RUN npm install -g typescript
 
-
-
