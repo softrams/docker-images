@@ -5,6 +5,11 @@ name: Docker
 # separate terms of service, privacy policy, and support
 # documentation.
 
+
+permissions:
+  contents: read
+  packages: write
+
 on:
   schedule:
     - cron: '0 5 * * *' # everyday at 5am
