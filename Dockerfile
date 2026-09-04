@@ -237,14 +237,6 @@ COPY devops/scripts/ctkey-shim.sh /usr/local/bin/ctkey
 RUN chmod 755 /usr/local/bin/ctkey
 
 # =============================================================================
-# Admiral Queue Helper
-# =============================================================================
-# Queue mutations should run through a simple container-local command instead of
-# calling a repo script by mounted host path.
-COPY python/workflow_queue.py /usr/local/bin/admiral-queue
-RUN chmod 755 /usr/local/bin/admiral-queue
-
-# =============================================================================
 # Entrypoint Script
 # =============================================================================
 # Sets up gh auth from env vars before starting OpenCode
