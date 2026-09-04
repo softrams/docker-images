@@ -233,9 +233,6 @@ RUN chmod 644 /etc/ssh/ssh_config.d/99-admiral-network-lockdown.conf
 # Existing local deploy scripts often call `eval $(ctkey setenv ...)`.
 # We intentionally do not include real ctkey in the container. This shim only
 # re-exports the already-present restricted AWS credentials.
-COPY devops/scripts/ctkey-shim.sh /usr/local/bin/ctkey
-RUN chmod 755 /usr/local/bin/ctkey
-
 # =============================================================================
 # Entrypoint Script
 # =============================================================================
