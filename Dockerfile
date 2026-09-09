@@ -190,6 +190,7 @@ ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/lib/chromium/chromium
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 ARG PLAYWRIGHT_MCP_VERSION=0.0.64
 RUN npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION} \
+    && ln -sf "$(npm root -g)/@playwright/mcp/cli.js" /usr/local/bin/playwright-mcp \
     && mkdir -p /opt/playwright \
     && chown -R opencode:opencode /opt/playwright \
     && chmod -R 755 /opt/playwright
