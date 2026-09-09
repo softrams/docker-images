@@ -268,6 +268,7 @@ RUN echo 'export NVM_DIR="/home/opencode/.nvm"' >> /home/opencode/.bashrc \
 # =============================================================================
 RUN mkdir -p /home/opencode/.config/opencode \
     && chown -R opencode:opencode /home/opencode/.config
+COPY --chown=opencode:opencode tui.json /home/opencode/.config/opencode/tui.json
 
 # =============================================================================
 # Create directories for opencode user

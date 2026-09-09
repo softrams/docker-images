@@ -61,6 +61,11 @@ run_playwright_dev_login() {
 mkdir -p "$HOME_DIR/.local/share/opencode"
 mkdir -p "$PLAYWRIGHT_AUTH_DIR"
 
+if [ ! -f "$PLAYWRIGHT_AUTH_FILE" ]; then
+    printf '{}\n' > "$PLAYWRIGHT_AUTH_FILE"
+    chmod 600 "$PLAYWRIGHT_AUTH_FILE"
+fi
+
 if [ -f "$HOST_OPENCODE_SHARE_DIR/auth.json" ]; then
     cp "$HOST_OPENCODE_SHARE_DIR/auth.json" "$HOME_DIR/.local/share/opencode/auth.json"
     chmod 600 "$HOME_DIR/.local/share/opencode/auth.json"
