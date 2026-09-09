@@ -150,23 +150,6 @@ EOF
 fi
 
 # =============================================================================
-# OpenCode .opencode Directory Setup
-# =============================================================================
-# The .opencode directory (tools, commands) is baked into /opt/admiral-opencode
-# but ~/admiral is a volume mount that would shadow it. We symlink it in.
-
-if [ -d "/opt/admiral-opencode" ] && [ ! -e "$HOME_DIR/admiral/.opencode" ]; then
-    echo "Setting up .opencode symlink..."
-    mkdir -p "$HOME_DIR/admiral"
-    ln -sf /opt/admiral-opencode "$HOME_DIR/admiral/.opencode"
-elif [ -d "/opt/admiral-opencode" ] && [ -d "$HOME_DIR/admiral/.opencode" ] && [ ! -L "$HOME_DIR/admiral/.opencode" ]; then
-    # .opencode exists as a real directory (from volume), replace with symlink
-    echo "Replacing .opencode directory with symlink to baked-in version..."
-    rm -rf "$HOME_DIR/admiral/.opencode"
-    ln -sf /opt/admiral-opencode "$HOME_DIR/admiral/.opencode"
-fi
-
-# =============================================================================
 # External AI DX Adapter Setup
 # =============================================================================
 # OPENCODE_CONFIG_DIR must be writable because OpenCode may install dependencies

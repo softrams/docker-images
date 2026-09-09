@@ -227,13 +227,6 @@ RUN mkdir -p /etc/ssh/ssh_config.d
 COPY ssh_config /etc/ssh/ssh_config.d/99-admiral-network-lockdown.conf
 RUN chmod 644 /etc/ssh/ssh_config.d/99-admiral-network-lockdown.conf
 
-# =============================================================================
-# ctkey Compatibility Shim
-# =============================================================================
-# Existing local deploy scripts often call `eval $(ctkey setenv ...)`.
-# We intentionally do not include real ctkey in the container. This shim only
-# re-exports the already-present restricted AWS credentials.
-# =============================================================================
 # Entrypoint Script
 # =============================================================================
 # Sets up gh auth from env vars before starting OpenCode
@@ -270,21 +263,11 @@ RUN echo 'export NVM_DIR="/home/opencode/.nvm"' >> /home/opencode/.bashrc \
     && chown opencode:opencode /home/opencode/.bashrc
 
 # =============================================================================
-# OpenCode Configuration (baked into image)
+# OpenCode configuration is supplied by Admiral profile mounts at runtime.
+# The image contains only the reusable runtime.
 # =============================================================================
-# Copy the OpenCode config file
 RUN mkdir -p /home/opencode/.config/opencode \
     && chown -R opencode:opencode /home/opencode/.config
-COPY --chown=opencode:opencode opencode.json /home/opencode/.config/opencode/opencode.json
-
-# Copy .opencode directory (tools, commands, agents) to /opt and install dependencies
-# This location won't be shadowed by the ~/admiral volume mount
-# The entrypoint script will symlink this into the workspace
-COPY .opencode /opt/admiral-opencode
-RUN if [ -f /opt/admiral-opencode/package.json ]; then \
-        cd /opt/admiral-opencode && npm install; \
-    fi \
-    && chown -R opencode:opencode /opt/admiral-opencode
 
 # =============================================================================
 # Create directories for opencode user
