@@ -166,7 +166,7 @@ ENV PATH="/home/opencode/.local/bin:${PATH}"
 # =============================================================================
 # OpenCode CLI (download glibc version for Ubuntu)
 # =============================================================================
-ARG OPENCODE_VERSION=1.1.51
+ARG OPENCODE_VERSION=1.18.30
 RUN ARCH=$(dpkg --print-architecture | sed 's/amd64/x64/') \
     && curl -fsSL "https://github.com/anomalyco/opencode/releases/download/v${OPENCODE_VERSION}/opencode-linux-${ARCH}.tar.gz" \
     | tar -C /usr/local/bin -xzf - \
