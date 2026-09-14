@@ -42,4 +42,7 @@ RUN export TAIKO_SKIP_CHROMIUM_DOWNLOAD=true && \
 RUN apt-get update && \
     apt-get install -y python-dev-is-python3 python3-pip jq && \
     pip3 install awscli --break-system-packages && \
-    jq --version  
+    jq --version
+
+# Install Playwright Chromium browser
+RUN npx playwright install chromium  
