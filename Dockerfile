@@ -1,57 +1,38 @@
-# Dockerfile for Admiral OpenCode Development Container
-# Ubuntu 24.04 base with development tools for IDDOC/Admiral workspace
-#
-# Includes:
-#   - Node.js (via nvm) - LTS Iron (v20.x)
-#   - Python 3.12 + pip
-#   - Terraform (via tfenv) - 1.7.3
-#   - terraform-docs, tflint, trivy, driftctl
-#   - pre-commit, commitizen
-#   - uv/uvx (for MCP servers)
-#   - Playwright MCP (browser automation)
-#   - Core CLI tools: git, jq, yq, fzf, fd, ripgrep, tmux, curl, wget
-#
-# SECURITY: Runs as non-root user 'opencode' (UID 1000)
+# IDDOC development toolchain image.
+# This image provides a general-purpose workspace for VS Code/Cursor Dev
+# Containers and interactive CLI tools. It deliberately does not bundle or
+# configure a coding-agent runtime (such as OpenCode).
 
 FROM ubuntu:24.04
 
-# Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Set shell to bash
-SHELL ["/bin/bash", "-c"]
-
-# =============================================================================
-# Core System Packages
-# =============================================================================
+# Base OS and command-line utilities. Ubuntu 24.04 provides Python 3.12.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # Essential build tools
     build-essential \
     ca-certificates \
-    gnupg \
-    software-properties-common \
-    # Core CLI tools
-    git \
     curl \
-    wget \
-    unzip \
-    jq \
-    tmux \
-    # Search tools
     fzf \
     fd-find \
+    git \
+    gnupg \
+    jq \
+    less \
+    openssh-client \
     ripgrep \
-    # Python 3.12 (ships with Ubuntu 24.04)
+    software-properties-common \
+    tmux \
+    unzip \
+    wget \
     python3 \
     python3-pip \
     python3-venv \
-    # Misc
-    openssh-client \
-    less \
-    # corkscrew for SSH proxy tunneling through Squid (network lockdown)
     corkscrew \
+    && ln -s /usr/bin/fdfind /usr/local/bin/fd \
     && rm -rf /var/lib/apt/lists/*
 
+# Install AWS CLI v2 for the target architecture.
 RUN arch="$(dpkg --print-architecture)" \
     && case "$arch" in \
       amd64) aws_arch="x86_64" ;; \
@@ -63,237 +44,117 @@ RUN arch="$(dpkg --print-architecture)" \
     && /tmp/aws/install \
     && rm -rf /tmp/aws /tmp/awscliv2.zip
 
-# Create symlink for fd (Ubuntu packages it as fdfind)
-RUN ln -s $(which fdfind) /usr/local/bin/fd || true
+# Use the standard VS Code Dev Containers user and UID/GID.
+ARG USER_UID=1000
+ARG USER_GID=${USER_UID}
+RUN if getent group "$USER_GID" >/dev/null; then \
+      existing_group="$(getent group "$USER_GID" | cut -d: -f1)"; \
+      if [ "$existing_group" != "vscode" ]; then groupmod --new-name vscode "$existing_group"; fi; \
+    else groupadd --gid "$USER_GID" vscode; fi \
+    && if getent passwd "$USER_UID" >/dev/null; then \
+      existing_user="$(getent passwd "$USER_UID" | cut -d: -f1)"; \
+      if [ "$existing_user" != "vscode" ]; then usermod --login vscode --home /home/vscode --move-home "$existing_user"; fi; \
+    else useradd --uid "$USER_UID" --gid "$USER_GID" --create-home --shell /bin/bash vscode; fi \
+    && usermod --gid "$USER_GID" --groups "" vscode \
+    && mkdir -p /home/vscode \
+    && chown -R "$USER_UID:$USER_GID" /home/vscode
 
-# =============================================================================
-# Create non-root user 'opencode'
-# =============================================================================
-# Ubuntu 24.04 ships with 'ubuntu' user at UID 1000, so we use UID 1001
-# to avoid conflicts. This still provides non-root security benefits.
-RUN groupadd -g 1001 opencode && \
-    useradd -m -u 1001 -g opencode -s /bin/bash opencode
-
-# =============================================================================
-# Go (needed for some tool builds)
-# =============================================================================
-# Install Go system-wide (as root), but set GOPATH for opencode user
+# Go toolchain.
 ARG GO_VERSION=1.22.5
 RUN curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-$(dpkg --print-architecture).tar.gz" \
     | tar -C /usr/local -xzf -
-ENV PATH="/usr/local/go/bin:/home/opencode/go/bin:${PATH}"
-ENV GOPATH="/home/opencode/go"
+ENV GOPATH="/home/vscode/go"
+ENV PATH="/usr/local/go/bin:/home/vscode/go/bin:${PATH}"
 
-# =============================================================================
-# Node.js via NVM (installed for opencode user)
-# =============================================================================
-ENV NVM_DIR="/home/opencode/.nvm"
+# Node.js LTS via nvm, installed for the non-root workspace user.
 ARG NODE_VERSION=20
-RUN mkdir -p /home/opencode/.nvm && chown opencode:opencode /home/opencode/.nvm
-USER opencode
+ENV NVM_DIR="/home/vscode/.nvm"
+USER vscode
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
     && source "$NVM_DIR/nvm.sh" \
-    && nvm install ${NODE_VERSION} \
-    && nvm alias default ${NODE_VERSION} \
+    && nvm install "$NODE_VERSION" \
+    && nvm alias default "$NODE_VERSION" \
     && nvm use default
 USER root
-# Create symlinks for node/npm to be available system-wide
-RUN source "/home/opencode/.nvm/nvm.sh" \
-    && ln -s "/home/opencode/.nvm/versions/node/$(nvm current)/bin/node" /usr/local/bin/node \
-    && ln -s "/home/opencode/.nvm/versions/node/$(nvm current)/bin/npm" /usr/local/bin/npm \
-    && ln -s "/home/opencode/.nvm/versions/node/$(nvm current)/bin/npx" /usr/local/bin/npx
+RUN source "$NVM_DIR/nvm.sh" \
+    && ln -s "$NVM_DIR/versions/node/$(nvm current)/bin/node" /usr/local/bin/node \
+    && ln -s "$NVM_DIR/versions/node/$(nvm current)/bin/npm" /usr/local/bin/npm \
+    && ln -s "$NVM_DIR/versions/node/$(nvm current)/bin/npx" /usr/local/bin/npx
 
-# =============================================================================
-# Terraform via tfenv (installed for opencode user)
-# =============================================================================
+# Terraform and common IaC validation/security tools.
 ARG TERRAFORM_VERSION=1.7.3
-RUN git clone --depth=1 https://github.com/tfutils/tfenv.git /home/opencode/.tfenv \
-    && chown -R opencode:opencode /home/opencode/.tfenv \
-    && ln -s /home/opencode/.tfenv/bin/* /usr/local/bin/
-USER opencode
-RUN tfenv install ${TERRAFORM_VERSION} \
-    && tfenv use ${TERRAFORM_VERSION}
+RUN git clone --depth=1 https://github.com/tfutils/tfenv.git /home/vscode/.tfenv \
+    && chown -R vscode:vscode /home/vscode/.tfenv \
+    && ln -s /home/vscode/.tfenv/bin/* /usr/local/bin/
+USER vscode
+RUN tfenv install "$TERRAFORM_VERSION" && tfenv use "$TERRAFORM_VERSION"
 USER root
 
-# =============================================================================
-# Terraform Tools (installed system-wide as root)
-# =============================================================================
-
-# terraform-docs
 ARG TERRAFORM_DOCS_VERSION=0.18.0
 RUN curl -fsSL "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-$(dpkg --print-architecture).tar.gz" \
     | tar -C /usr/local/bin -xzf - terraform-docs \
     && chmod +x /usr/local/bin/terraform-docs
 
-# tflint
 ARG TFLINT_VERSION=0.53.0
 RUN curl -fsSL "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_$(dpkg --print-architecture).zip" -o /tmp/tflint.zip \
     && unzip /tmp/tflint.zip -d /usr/local/bin \
     && chmod +x /usr/local/bin/tflint \
     && rm /tmp/tflint.zip
 
-# trivy (security scanner)
-RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-
-# driftctl
-ARG DRIFTCTL_VERSION=0.40.0
-RUN curl -fsSL "https://github.com/snyk/driftctl/releases/download/v${DRIFTCTL_VERSION}/driftctl_linux_$(dpkg --print-architecture)" -o /usr/local/bin/driftctl \
-    && chmod +x /usr/local/bin/driftctl
-
-# =============================================================================
-# yq (YAML processor)
-# =============================================================================
 ARG YQ_VERSION=4.44.3
 RUN curl -fsSL "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_$(dpkg --print-architecture)" -o /usr/local/bin/yq \
     && chmod +x /usr/local/bin/yq
 
-# =============================================================================
-# Python Tools (pre-commit, commitizen, boto3)
-# =============================================================================
-RUN pip3 install --break-system-packages --no-cache-dir \
-    pre-commit \
-    commitizen \
-    boto3==1.40.15
+ARG DRIFTCTL_VERSION=0.40.0
+RUN curl -fsSL "https://github.com/snyk/driftctl/releases/download/v${DRIFTCTL_VERSION}/driftctl_linux_$(dpkg --print-architecture)" -o /usr/local/bin/driftctl \
+    && chmod +x /usr/local/bin/driftctl
 
-# =============================================================================
-# uv/uvx (Astral - for MCP servers) - installed for opencode user
-# =============================================================================
-USER opencode
+# Trivy is installed from its upstream installer.
+ARG TRIVY_VERSION=0.75.0
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+    | sh -s -- -b /usr/local/bin "v${TRIVY_VERSION}"
+
+# Python developer utilities; system Python is marked externally managed on
+# Ubuntu 24.04, hence --break-system-packages for these container-scoped tools.
+RUN pip3 install --break-system-packages --no-cache-dir pre-commit commitizen boto3==1.40.15
+
+# uv/uvx and GitHub CLI support Python workflows and authenticated GitHub work.
+USER vscode
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 USER root
-ENV PATH="/home/opencode/.local/bin:${PATH}"
+ENV PATH="/home/vscode/.local/bin:${PATH}"
 
-# =============================================================================
-# OpenCode CLI (download glibc version for Ubuntu)
-# =============================================================================
-ARG OPENCODE_VERSION=1.18.30
-RUN ARCH=$(dpkg --print-architecture | sed 's/amd64/x64/') \
-    && curl -fsSL "https://github.com/anomalyco/opencode/releases/download/v${OPENCODE_VERSION}/opencode-linux-${ARCH}.tar.gz" \
-    | tar -C /usr/local/bin -xzf - \
-    && chmod +x /usr/local/bin/opencode
-
-# =============================================================================
-# Playwright MCP (browser automation for testing)
-# =============================================================================
-# Ubuntu 24.04 only offers Chromium via snap, which doesn't work in Docker.
-# Solution: Add Debian's repository to get real chromium packages for ARM64.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends debian-archive-keyring \
-    && echo "deb [signed-by=/usr/share/keyrings/debian-archive-keyring.gpg] http://deb.debian.org/debian bookworm main" > /etc/apt/sources.list.d/debian.list \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends chromium \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm /etc/apt/sources.list.d/debian.list
-
-ENV PLAYWRIGHT_BROWSERS_PATH=/opt/playwright
-ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/lib/chromium/chromium
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-ARG PLAYWRIGHT_MCP_VERSION=0.0.64
-RUN npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION} \
-    && ln -sf "$(npm root -g)/@playwright/mcp/cli.js" /usr/local/bin/playwright-mcp \
-    && mkdir -p /opt/playwright \
-    && chown -R opencode:opencode /opt/playwright \
-    && chmod -R 755 /opt/playwright
-
-# =============================================================================
-# GitHub CLI (for git credential helper)
-# =============================================================================
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+      -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
     && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+      > /etc/apt/sources.list.d/github-cli.list \
     && apt-get update \
-    && apt-get install -y gh \
+    && apt-get install -y --no-install-recommends gh \
     && rm -rf /var/lib/apt/lists/*
 
-# =============================================================================
-# Git Configuration (for opencode user)
-# =============================================================================
-# Safe directory wildcard allows git to work with mounted repos owned by different UID
-USER opencode
-RUN git config --global --add safe.directory '*' \
-    && git config --global user.email "opencode@triafed.com" \
-    && git config --global user.name "OpenCode"
-USER root
+# User shell and workspace defaults. Git identity and credentials are left to
+# the developer/Dev Container configuration; no agent login is bootstrapped.
+RUN printf '%s\n' \
+      'export NVM_DIR="$HOME/.nvm"' \
+      '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' \
+      '[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"' \
+      >> /home/vscode/.bashrc \
+    && mkdir -p /home/vscode/workspace /home/vscode/go \
+    && chown -R vscode:vscode /home/vscode
 
-# =============================================================================
-# SSH Configuration (Network Lockdown)
-# =============================================================================
-# System-wide SSH config that routes SSH through egress-proxy and blocks
-# all non-allowlisted hosts. Placed in /etc/ssh/ssh_config.d/ so it's
-# owned by root and cannot be modified by the opencode user.
-#
-# NOTE: The "99-" prefix ensures this file is loaded LAST, so the
-# "Host *" catch-all rule takes effect after any other configs.
-RUN mkdir -p /etc/ssh/ssh_config.d
-COPY ssh_config /etc/ssh/ssh_config.d/99-admiral-network-lockdown.conf
-RUN chmod 644 /etc/ssh/ssh_config.d/99-admiral-network-lockdown.conf
+ENV TF_SUPPRESS_PROVIDER_OVERRIDE_WARNINGS=1 \
+    DCTL_FILTER="" \
+    DCTL_DEEP=false \
+    DCTL_QUIET=true \
+    DCTL_DRIFTIGNORE=".driftignore" \
+    DCTL_ONLY_UNMANAGED=false \
+    DCTL_NO_VERSION_CHECK=true \
+    DCTL_DISABLE_TELEMETRY=true \
+    AWS_REGION=us-east-1 \
+    AWS_DEFAULT_REGION=us-east-1 \
+    AWS_DEFAULT_OUTPUT=json
 
-# Entrypoint Script
-# =============================================================================
-# Sets up gh auth from env vars before starting OpenCode
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-COPY scripts/login-dev-workspace.js /opt/admiral-playwright/login-dev-workspace.js
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-# =============================================================================
-# Driftctl Environment Variables
-# =============================================================================
-ENV TF_SUPPRESS_PROVIDER_OVERRIDE_WARNINGS=1
-ENV DCTL_FILTER=""
-ENV DCTL_DEEP=false
-ENV DCTL_QUIET=true
-ENV DCTL_DRIFTIGNORE=".driftignore"
-ENV DCTL_ONLY_UNMANAGED=false
-ENV DCTL_NO_VERSION_CHECK=true
-ENV DCTL_DISABLE_TELEMETRY=true
-
-# =============================================================================
-# AWS Environment Variables
-# =============================================================================
-ENV AWS_REGION=us-east-1
-ENV AWS_DEFAULT_REGION=us-east-1
-ENV AWS_DEFAULT_OUTPUT=json
-
-# =============================================================================
-# Shell Configuration (for opencode user)
-# =============================================================================
-# Source nvm in bashrc for interactive shells
-RUN echo 'export NVM_DIR="/home/opencode/.nvm"' >> /home/opencode/.bashrc \
-    && echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> /home/opencode/.bashrc \
-    && echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> /home/opencode/.bashrc \
-    && chown opencode:opencode /home/opencode/.bashrc
-
-# =============================================================================
-# OpenCode configuration is supplied by Admiral profile mounts at runtime.
-# The image contains only the reusable runtime.
-# =============================================================================
-RUN mkdir -p /home/opencode/.config/opencode \
-    && chown -R opencode:opencode /home/opencode/.config
-COPY --chown=opencode:opencode tui.json /home/opencode/.config/opencode/tui.json
-
-# =============================================================================
-# Create directories for opencode user
-# =============================================================================
-# Pre-create ALL directories that will be volume-mounted so they exist with
-# correct ownership BEFORE Docker mounts volumes (otherwise Docker creates
-# mount points as root). This is critical for non-root container operation.
-RUN mkdir -p /home/opencode/admiral \
-    && mkdir -p /home/opencode/.local/share/opencode/storage \
-    && mkdir -p /home/opencode/.local/share/opencode/snapshot \
-    && mkdir -p /home/opencode/.local/share/opencode/log \
-    && mkdir -p /home/opencode/.local/share/opencode/exports \
-    && mkdir -p /home/opencode/.local/share/opencode/tool-output \
-    && mkdir -p /home/opencode/.local/share/opencode/bin \
-    && mkdir -p /home/opencode/.cache/opencode \
-    && mkdir -p /home/opencode/.local/state/opencode \
-    && mkdir -p /home/opencode/go \
-    && chown -R opencode:opencode /home/opencode
-
-# =============================================================================
-# Finalize - switch to non-root user
-# =============================================================================
-USER opencode
-WORKDIR /home/opencode/admiral
-
-# Default command (overridden by docker-compose)
-CMD ["opencode", "serve", "--port", "4096", "--hostname", "0.0.0.0"]
+USER vscode
+WORKDIR /home/vscode/workspace
+CMD ["sleep", "infinity"]
