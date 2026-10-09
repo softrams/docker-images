@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     less \
     openssh-client \
     ripgrep \
+    shellcheck \
     software-properties-common \
     tmux \
     unzip \
@@ -117,6 +118,18 @@ RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/
 # Python developer utilities; system Python is marked externally managed on
 # Ubuntu 24.04, hence --break-system-packages for these container-scoped tools.
 RUN pip3 install --break-system-packages --no-cache-dir pre-commit commitizen boto3==1.40.15
+
+# Configure pre-commit's native Git template integration for the workspace user.
+# Git copies these standard hook wrappers into every later git clone/init run as
+# vscode. Repositories without a pre-commit config skip the hooks automatically.
+ENV PRE_COMMIT_TEMPLATE_DIR=/home/vscode/.cache/pre-commit/admiral-git-template
+USER vscode
+RUN mkdir -p "$PRE_COMMIT_TEMPLATE_DIR" \
+    && git config --global init.templateDir "$PRE_COMMIT_TEMPLATE_DIR" \
+    && pre-commit init-templatedir --hook-type pre-commit "$PRE_COMMIT_TEMPLATE_DIR" \
+    && pre-commit init-templatedir --hook-type commit-msg "$PRE_COMMIT_TEMPLATE_DIR" \
+    && pre-commit init-templatedir --hook-type pre-push "$PRE_COMMIT_TEMPLATE_DIR"
+USER root
 
 # uv/uvx and GitHub CLI support Python workflows and authenticated GitHub work.
 USER vscode
