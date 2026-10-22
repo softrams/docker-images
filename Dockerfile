@@ -39,11 +39,16 @@ RUN export TAIKO_SKIP_CHROMIUM_DOWNLOAD=true && \
      npm install -g taiko
 
 
-# Install AWS CLI, jq, and GitHub CLI
+# Install AWS CLI, boto3, pre-commit, and jq
 RUN apt-get update && \
     apt-get install -y python-dev-is-python3 python3-pip jq && \
-    pip3 install awscli --break-system-packages && \
-    jq --version
+    pip3 install awscli boto3 pre-commit==4.0.1 --break-system-packages && \
+    jq --version && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Mustache is used by the UI pipeline to render its environment config
+RUN npm install -g mustache
 
 # Install GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
